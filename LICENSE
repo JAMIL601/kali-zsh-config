@@ -1,30 +1,25 @@
-Kali Zsh Config — Non-Commercial License
+MIT License
 
 Copyright (c) 2026 Jamil601
 
-Permission is granted to any person obtaining a copy of this software and
-associated documentation files (the "Software") to:
+Permission is hereby granted, free of charge, to anyone who receives a copy
+of this software and its documentation.
 
-- Use the Software for personal and educational purposes.
-- Download and install the Software on any compatible computer.
-- Copy and modify the Software for personal or educational use.
-- Share and redistribute the Software free of charge.
-- Create forks or modified versions of the Software, provided that this
-  license and the original copyright notice are retained.
+You are free to:
 
-The Software may not be:
+- Use the software for personal, educational, or commercial purposes.
+- Download and install it on your own systems.
+- Copy and share it with others.
+- Modify it and create your own versions.
+- Include it in your own projects or software.
+- Sell software or services that include or use this project.
 
-- Sold or resold.
-- Included in a paid product or service.
-- Distributed as part of a commercial package for which users are charged.
-- Used to create a paid copy, subscription, or service whose primary value
-  is the Software itself.
+The only requirement is that the original copyright notice and this license
+notice are included in copies or substantial portions of the software.
 
-No permission is granted to use the name "Jamil601" or the original project
-branding to imply endorsement of modified or redistributed versions.
+You do not need to ask for permission before using, modifying, sharing, or
+selling software that includes this project.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE
-USE OF THE SOFTWARE.
+IMPLIED. THE AUTHOR IS NOT RESPONSIBLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
