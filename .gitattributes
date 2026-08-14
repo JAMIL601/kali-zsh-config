@@ -1,0 +1,21 @@
+# Keep repository text files in Unix LF format
+* text=auto eol=lf
+
+# Shell / Zsh files
+*.sh text eol=lf
+*.zsh text eol=lf
+
+# Documentation
+*.md text eol=lf
+
+# GitHub metadata
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
