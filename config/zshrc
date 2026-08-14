@@ -2,8 +2,9 @@
 # Kali Zsh Config - Main Loader
 # ==========================================================
 
-# The installer defines this variable.
-# Do not try to calculate the repository path from $0.
+# ----------------------------------------------------------
+# Repository location
+# ----------------------------------------------------------
 
 if [[ -z "$KALI_ZSH_CONFIG_DIR" ]]; then
     print -u2 "Kali Zsh Config: KALI_ZSH_CONFIG_DIR is not set."
@@ -16,16 +17,129 @@ if [[ ! -d "$KALI_ZSH_CONFIG_DIR" ]]; then
     return 1
 fi
 
+
+# ==========================================================
 # Core configuration
+# ==========================================================
+
 source "$KALI_ZSH_CONFIG_DIR/config/options.zsh"
 source "$KALI_ZSH_CONFIG_DIR/config/aliases.zsh"
 source "$KALI_ZSH_CONFIG_DIR/config/completion.zsh"
 
-# Widgets
+
+# ==========================================================
+# Kali-style prompt
+# ==========================================================
+
+PROMPT_ALTERNATIVE=twoline
+NEWLINE_BEFORE_PROMPT=yes
+
+prompt_symbol=㉿
+
+PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot─)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV)─)}(%B%F{%(#.red.blue)}%n'$prompt_symbol$'%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
+
+unset prompt_symbol
+
+
+# ==========================================================
+# Kali terminal title
+# ==========================================================
+
+case "$TERM" in
+    xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty)
+        TERM_TITLE=$'\e]0;${debian_chroot:+($debian_chroot)}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))}%n@%m: %~\a'
+        ;;
+esac
+
+
+# ==========================================================
+# Terminal title / prompt preparation
+# ==========================================================
+
+precmd() {
+
+    if [[ -n "$TERM_TITLE" ]]; then
+        print -Pnr -- "$TERM_TITLE"
+    fi
+
+    if [[ "$NEWLINE_BEFORE_PROMPT" == yes ]]; then
+        if [[ -z "$_NEW_LINE_BEFORE_PROMPT" ]]; then
+            _NEW_LINE_BEFORE_PROMPT=1
+        else
+            print ""
+        fi
+    fi
+}
+
+
+# ==========================================================
+# Syntax highlighting
+# ==========================================================
+
+if [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+
+    ZSH_HIGHLIGHT_STYLES[default]=none
+    ZSH_HIGHLIGHT_STYLES[unknown-token]=underline
+    ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=cyan,bold'
+    ZSH_HIGHLIGHT_STYLES[precommand]='fg=green,underline'
+    ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=blue,bold'
+    ZSH_HIGHLIGHT_STYLES[path]='bold'
+    ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue,bold'
+    ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[redirection]='fg=blue,bold'
+    ZSH_HIGHLIGHT_STYLES[comment]='fg=black,bold'
+    ZSH_HIGHLIGHT_STYLES[arg0]='fg=cyan'
+    ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=red,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=blue,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=green,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-4]='fg=yellow,bold'
+    ZSH_HIGHLIGHT_STYLES[bracket-level-5]='fg=cyan,bold'
+    ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]=standout
+
+fi
+
+
+# ==========================================================
+# Autosuggestions
+# ==========================================================
+
+if [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+
+    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
+
+fi
+
+
+# ==========================================================
+# Filesystem preview widget
+# ==========================================================
+
 if [[ -f "$KALI_ZSH_CONFIG_DIR/widgets/filesystem-preview.zsh" ]]; then
     source "$KALI_ZSH_CONFIG_DIR/widgets/filesystem-preview.zsh"
 fi
 
+
+# ==========================================================
+# Tool completion module
+# ==========================================================
+
 if [[ -f "$KALI_ZSH_CONFIG_DIR/widgets/tool-completion.zsh" ]]; then
     source "$KALI_ZSH_CONFIG_DIR/widgets/tool-completion.zsh"
+fi
+
+
+# ==========================================================
+# Command-not-found
+# ==========================================================
+
+if [[ -f /etc/zsh_command_not_found ]]; then
+    source /etc/zsh_command_not_found
 fi
