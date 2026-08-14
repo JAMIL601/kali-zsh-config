@@ -1,22 +1,21 @@
 # ==========================================================
-# Kali Zsh Config
-# Main configuration loader
+# Kali Zsh Config - Main Loader
 # ==========================================================
 
-KALI_ZSH_CONFIG_DIR="${0:A:h:h}"
+# Absolute path to this repository.
+# The installer sets KALI_ZSH_CONFIG_DIR before loading this file.
 
-# ----------------------------------------------------------
+if [[ -z "$KALI_ZSH_CONFIG_DIR" || ! -d "$KALI_ZSH_CONFIG_DIR" ]]; then
+    print -u2 "Kali Zsh Config: repository path is not set or does not exist."
+    return 1
+fi
+
 # Core configuration
-# ----------------------------------------------------------
-
 source "$KALI_ZSH_CONFIG_DIR/config/options.zsh"
 source "$KALI_ZSH_CONFIG_DIR/config/aliases.zsh"
 source "$KALI_ZSH_CONFIG_DIR/config/completion.zsh"
 
-# ----------------------------------------------------------
 # Widgets
-# ----------------------------------------------------------
-
 [[ -f "$KALI_ZSH_CONFIG_DIR/widgets/filesystem-preview.zsh" ]] &&
     source "$KALI_ZSH_CONFIG_DIR/widgets/filesystem-preview.zsh"
 
