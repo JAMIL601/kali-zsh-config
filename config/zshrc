@@ -1,0 +1,24 @@
+# ==========================================================
+# Kali Zsh Config
+# Main configuration loader
+# ==========================================================
+
+KALI_ZSH_CONFIG_DIR="${0:A:h:h}"
+
+# ----------------------------------------------------------
+# Core configuration
+# ----------------------------------------------------------
+
+source "$KALI_ZSH_CONFIG_DIR/config/options.zsh"
+source "$KALI_ZSH_CONFIG_DIR/config/aliases.zsh"
+source "$KALI_ZSH_CONFIG_DIR/config/completion.zsh"
+
+# ----------------------------------------------------------
+# Widgets
+# ----------------------------------------------------------
+
+[[ -f "$KALI_ZSH_CONFIG_DIR/widgets/filesystem-preview.zsh" ]] &&
+    source "$KALI_ZSH_CONFIG_DIR/widgets/filesystem-preview.zsh"
+
+[[ -f "$KALI_ZSH_CONFIG_DIR/widgets/tool-completion.zsh" ]] &&
+    source "$KALI_ZSH_CONFIG_DIR/widgets/tool-completion.zsh"
