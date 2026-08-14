@@ -3,18 +3,13 @@
 # Tool Completion Enhancements
 # ==========================================================
 #
-# Purpose:
-#   - Provide a safe command-cache refresh helper
-#   - Keep normal Zsh completion untouched
-#   - Keep TAB untouched
-#   - Keep fzf-tab untouched
-#   - Keep autosuggestions untouched
+# Safe command-completion helper.
 #
 # This module does NOT replace:
 #   - TAB
 #   - self-insert
 #   - accept-line
-#   - fzf-tab widgets
+#   - fzf-tab
 #   - zsh-autosuggestions
 #
 # ==========================================================
@@ -24,20 +19,26 @@
 # Interactive shell safety
 # ----------------------------------------------------------
 
-[[ -o interactive ]] || return
+if [[ ! -o interactive ]]; then
+    return
+fi
 
 
 # ----------------------------------------------------------
-# Command completion cache refresh
+# Command cache refresh
 # ----------------------------------------------------------
 
 _tool_completion_refresh() {
     rehash
-    zle -M "Command completion cache refreshed"
-    zle redisplay
+    zle -M 'Command completion cache refreshed'
 }
 
-zle -N _tool_completion_refresh
+
+# Register the ZLE widget only when ZLE is available.
+
+if (( $+widgets[zle-line-init] || $+widgets[accept-line] )); then
+    zle -N _tool_completion_refresh
+fi
 
 
 # ----------------------------------------------------------
@@ -45,27 +46,13 @@ zle -N _tool_completion_refresh
 # ----------------------------------------------------------
 #
 # Ctrl + Alt + R
-# Refresh the Zsh command cache.
 #
-# This does NOT replace TAB or any normal editing widget.
+# Refreshes Zsh's command cache.
 #
 
 bindkey '^[^R' _tool_completion_refresh
 
 
-# ----------------------------------------------------------
-# Notes
-# ----------------------------------------------------------
-#
-# Zsh normally detects commands through its command hash.
-# Therefore we do not run "rehash" after every command.
-#
-# Use Ctrl + Alt + R when:
-#
-#   - A newly installed command is not completing yet
-#   - A command was removed or replaced
-#   - PATH was changed during the current shell session
-#
 # ==========================================================
-# END
+# END OF TOOL COMPLETION MODULE
 # ==========================================================
