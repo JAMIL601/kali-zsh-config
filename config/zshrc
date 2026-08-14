@@ -2,11 +2,17 @@
 # Kali Zsh Config - Main Loader
 # ==========================================================
 
-# Absolute path to this repository.
-# The installer sets KALI_ZSH_CONFIG_DIR before loading this file.
+# The installer defines this variable.
+# Do not try to calculate the repository path from $0.
 
-if [[ -z "$KALI_ZSH_CONFIG_DIR" || ! -d "$KALI_ZSH_CONFIG_DIR" ]]; then
-    print -u2 "Kali Zsh Config: repository path is not set or does not exist."
+if [[ -z "$KALI_ZSH_CONFIG_DIR" ]]; then
+    print -u2 "Kali Zsh Config: KALI_ZSH_CONFIG_DIR is not set."
+    return 1
+fi
+
+if [[ ! -d "$KALI_ZSH_CONFIG_DIR" ]]; then
+    print -u2 "Kali Zsh Config: repository not found:"
+    print -u2 "  $KALI_ZSH_CONFIG_DIR"
     return 1
 fi
 
@@ -16,8 +22,10 @@ source "$KALI_ZSH_CONFIG_DIR/config/aliases.zsh"
 source "$KALI_ZSH_CONFIG_DIR/config/completion.zsh"
 
 # Widgets
-[[ -f "$KALI_ZSH_CONFIG_DIR/widgets/filesystem-preview.zsh" ]] &&
+if [[ -f "$KALI_ZSH_CONFIG_DIR/widgets/filesystem-preview.zsh" ]]; then
     source "$KALI_ZSH_CONFIG_DIR/widgets/filesystem-preview.zsh"
+fi
 
-[[ -f "$KALI_ZSH_CONFIG_DIR/widgets/tool-completion.zsh" ]] &&
+if [[ -f "$KALI_ZSH_CONFIG_DIR/widgets/tool-completion.zsh" ]]; then
     source "$KALI_ZSH_CONFIG_DIR/widgets/tool-completion.zsh"
+fi
