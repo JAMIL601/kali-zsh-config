@@ -47,14 +47,14 @@ exec zsh
 If Zsh completion fails or stops responding:
 
 1. Ensure completion is initialized:
-   ```zsh
-   autoload -Uz compinit
-   ```
+```zsh
+autoload -Uz compinit
+```
 2. If completion remains broken, clear and rebuild the Zsh completion cache:
-   ```bash
-   rm -f ~/.zcompdump*
-   exec zsh
-   ```
+```bash
+rm -f ~/.zcompdump*
+exec zsh
+```
 
 ---
 

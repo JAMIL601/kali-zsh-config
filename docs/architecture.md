@@ -50,16 +50,16 @@ The configuration is loaded through a simple hierarchy:
 
 ```text
 Zsh
- │
- └── config/zshrc
-       │
-       ├── options.zsh
-       ├── aliases.zsh
-       ├── completion.zsh
-       │
-       └── widgets/
-             ├── filesystem-preview.zsh
-             └── tool-completion.zsh
+│
+└── config/zshrc
+│
+├── options.zsh
+├── aliases.zsh
+├── completion.zsh
+│
+└── widgets/
+├── filesystem-preview.zsh
+└── tool-completion.zsh
 ```
 
 * **`config/zshrc` acts as the main loader.** 

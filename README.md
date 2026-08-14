@@ -257,16 +257,16 @@ kali-zsh-config/
 The project uses a modular configuration architecture. The main loader is `config/zshrc` which loads individual modules.
 ```text
 ~/.zshrc
-    │
-    ▼
+│
+▼
 config/zshrc
-    │
-    ├── config/options.zsh
-    ├── config/aliases.zsh
-    ├── config/completion.zsh
-    └── widgets/
-          ├── filesystem-preview.zsh
-          └── tool-completion.zsh
+│
+├── config/options.zsh
+├── config/aliases.zsh
+├── config/completion.zsh
+└── widgets/
+├── filesystem-preview.zsh
+└── tool-completion.zsh
 ```
 
 ### 🧰 Setup Scripts
