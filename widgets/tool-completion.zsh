@@ -4,9 +4,9 @@
 # ==========================================================
 #
 # Purpose:
-#   - Improve command completion behavior
-#   - Refresh Zsh command cache when requested
-#   - Keep normal TAB completion untouched
+#   - Provide a safe command-cache refresh helper
+#   - Keep normal Zsh completion untouched
+#   - Keep TAB untouched
 #   - Keep fzf-tab untouched
 #   - Keep autosuggestions untouched
 #
@@ -21,24 +21,19 @@
 
 
 # ----------------------------------------------------------
-# Safety
+# Interactive shell safety
 # ----------------------------------------------------------
-
-# This file is intended for interactive Zsh.
-# Do nothing if Zsh is not running interactively.
 
 [[ -o interactive ]] || return
 
 
 # ----------------------------------------------------------
-# Command completion refresh helper
+# Command completion cache refresh
 # ----------------------------------------------------------
 
 _tool_completion_refresh() {
     rehash
-
     zle -M "Command completion cache refreshed"
-
     zle redisplay
 }
 
@@ -46,45 +41,31 @@ zle -N _tool_completion_refresh
 
 
 # ----------------------------------------------------------
-# Optional keyboard shortcut
+# Optional shortcut
 # ----------------------------------------------------------
 #
 # Ctrl + Alt + R
-# Refresh the command completion cache.
+# Refresh the Zsh command cache.
 #
-# This does NOT replace TAB.
-# It does NOT replace self-insert.
-# It does NOT replace accept-line.
+# This does NOT replace TAB or any normal editing widget.
 #
 
 bindkey '^[^R' _tool_completion_refresh
 
 
 # ----------------------------------------------------------
-# Completion refresh after command execution
+# Notes
 # ----------------------------------------------------------
 #
-# Zsh normally updates its command hash when necessary.
-# We intentionally do not force rehash after every command,
-# because doing so would create unnecessary overhead.
+# Zsh normally detects commands through its command hash.
+# Therefore we do not run "rehash" after every command.
 #
-# The manual shortcut above is provided when a newly installed
-# command is not immediately visible to completion.
+# Use Ctrl + Alt + R when:
 #
-
-
-# ----------------------------------------------------------
-# Safety check
-# ----------------------------------------------------------
+#   - A newly installed command is not completing yet
+#   - A command was removed or replaced
+#   - PATH was changed during the current shell session
 #
-# Nothing in this file replaces:
-#
-#   TAB
-#   self-insert
-#   accept-line
-#   fzf-tab widgets
-#   zsh-autosuggestions
-#
-# The module only provides a safe command-cache refresh helper.
-#
+# ==========================================================
+# END
 # ==========================================================
