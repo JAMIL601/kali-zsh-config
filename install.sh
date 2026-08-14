@@ -1,82 +1,240 @@
 #!/usr/bin/env bash
 
 # ==========================================================
-# Kali Zsh Configuration
-# Main Installer
+# Kali Zsh Config - Main Installer
+# ==========================================================
+#
+# Installs the repository-based Zsh configuration.
+#
+# The installer:
+#   1. Detects the repository location
+#   2. Checks required files
+#   3. Runs optional setup scripts
+#   4. Backs up the existing ~/.zshrc
+#   5. Creates a small ~/.zshrc loader
+#   6. Points Zsh to this repository
+#
 # ==========================================================
 
 set -e
 
+# ----------------------------------------------------------
+# Repository location
+# ----------------------------------------------------------
+
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ZSHRC="$HOME/.zshrc"
-BACKUP="$HOME/.zshrc.backup"
 
 echo
 echo "=========================================="
-echo " Kali Zsh Configuration Installer"
+echo "       Kali Zsh Config Installer"
 echo "=========================================="
+echo
+echo "[+] Repository: $REPO_DIR"
 echo
 
 # ----------------------------------------------------------
-# Check required commands
+# Basic checks
 # ----------------------------------------------------------
 
-for cmd in bash git zsh; do
-    if ! command -v "$cmd" >/dev/null 2>&1; then
-        echo "[!] Required command not found: $cmd"
-        echo "    Run: ./setup/packages.sh"
+if [[ ! -d "$REPO_DIR/config" ]]; then
+    echo "[!] Error: config directory not found."
+    exit 1
+fi
+
+if [[ ! -f "$REPO_DIR/config/zshrc" ]]; then
+    echo "[!] Error: config/zshrc not found."
+    exit 1
+fi
+
+if [[ ! -f "$REPO_DIR/config/options.zsh" ]]; then
+    echo "[!] Error: config/options.zsh not found."
+    exit 1
+fi
+
+if [[ ! -f "$REPO_DIR/config/aliases.zsh" ]]; then
+    echo "[!] Error: config/aliases.zsh not found."
+    exit 1
+fi
+
+if [[ ! -f "$REPO_DIR/config/completion.zsh" ]]; then
+    echo "[!] Error: config/completion.zsh not found."
+    exit 1
+fi
+
+echo "[+] Configuration files found."
+
+# ----------------------------------------------------------
+# Check Zsh
+# ----------------------------------------------------------
+
+if ! command -v zsh >/dev/null 2>&1; then
+    echo
+    echo "[!] Zsh is not installed."
+    echo "[!] Install it with:"
+    echo
+    echo "    sudo apt install zsh"
+    echo
+    exit 1
+fi
+
+echo "[+] Zsh detected: $(zsh --version)"
+
+# ----------------------------------------------------------
+# Optional package setup
+# ----------------------------------------------------------
+
+if [[ -f "$REPO_DIR/setup/packages.sh" ]]; then
+    echo
+    echo "[+] Running package setup..."
+
+    chmod +x "$REPO_DIR/setup/packages.sh"
+
+    if "$REPO_DIR/setup/packages.sh"; then
+        echo "[+] Package setup completed."
+    else
+        echo "[!] Package setup returned an error."
         exit 1
     fi
-done
+fi
 
 # ----------------------------------------------------------
-# Install packages
+# Optional directory setup
 # ----------------------------------------------------------
 
-echo "[+] Installing required packages..."
-"$REPO_DIR/setup/packages.sh"
+if [[ -f "$REPO_DIR/setup/directories.sh" ]]; then
+    echo
+    echo "[+] Running directory setup..."
 
-# ----------------------------------------------------------
-# Create directories
-# ----------------------------------------------------------
+    chmod +x "$REPO_DIR/setup/directories.sh"
 
-echo "[+] Creating required directories..."
-"$REPO_DIR/setup/directories.sh"
-
-# ----------------------------------------------------------
-# Install plugins
-# ----------------------------------------------------------
-
-echo "[+] Installing Zsh plugins..."
-"$REPO_DIR/setup/plugins.sh"
-
-# ----------------------------------------------------------
-# Backup existing .zshrc
-# ----------------------------------------------------------
-
-if [[ -f "$ZSHRC" ]]; then
-
-    if [[ ! -f "$BACKUP" ]]; then
-        echo "[+] Backing up existing ~/.zshrc..."
-        cp "$ZSHRC" "$BACKUP"
+    if "$REPO_DIR/setup/directories.sh"; then
+        echo "[+] Directory setup completed."
     else
-        echo "[=] ~/.zshrc.backup already exists."
+        echo "[!] Directory setup returned an error."
+        exit 1
+    fi
+fi
+
+# ----------------------------------------------------------
+# Optional plugin setup
+# ----------------------------------------------------------
+
+if [[ -f "$REPO_DIR/setup/plugins.sh" ]]; then
+    echo
+    echo "[+] Running plugin setup..."
+
+    chmod +x "$REPO_DIR/setup/plugins.sh"
+
+    if "$REPO_DIR/setup/plugins.sh"; then
+        echo "[+] Plugin setup completed."
+    else
+        echo "[!] Plugin setup returned an error."
+        exit 1
+    fi
+fi
+
+# ----------------------------------------------------------
+# Backup existing ~/.zshrc
+# ----------------------------------------------------------
+
+if [[ -f "$HOME/.zshrc" ]]; then
+
+    BACKUP="$HOME/.zshrc.backup"
+
+    echo
+    echo "[+] Backing up existing ~/.zshrc..."
+
+    # Avoid overwriting an existing backup.
+    if [[ -e "$BACKUP" ]]; then
+        BACKUP="$HOME/.zshrc.backup.$(date +%Y%m%d-%H%M%S)"
     fi
 
+    cp "$HOME/.zshrc" "$BACKUP"
+
+    echo "[+] Backup created:"
+    echo "    $BACKUP"
+
 else
+    echo
     echo "[+] No existing ~/.zshrc found."
 fi
 
 # ----------------------------------------------------------
-# Install configuration
+# Create repository-based ~/.zshrc loader
 # ----------------------------------------------------------
 
+echo
 echo "[+] Installing repository Zsh configuration..."
 
-cp "$REPO_DIR/config/zshrc" "$ZSHRC"
+cat > "$HOME/.zshrc" <<EOF
+# ==========================================================
+# Kali Zsh Config
+# Generated by install.sh
+# ==========================================================
+
+# Absolute path to this repository.
+export KALI_ZSH_CONFIG_DIR="$REPO_DIR"
+
+# Load the repository configuration.
+source "\$KALI_ZSH_CONFIG_DIR/config/zshrc"
+EOF
 
 # ----------------------------------------------------------
-# Finish
+# Verify generated ~/.zshrc
+# ----------------------------------------------------------
+
+if [[ ! -f "$HOME/.zshrc" ]]; then
+    echo "[!] Failed to create ~/.zshrc."
+    exit 1
+fi
+
+echo "[+] ~/.zshrc installed."
+
+# ----------------------------------------------------------
+# Syntax checks
+# ----------------------------------------------------------
+
+echo
+echo "[+] Checking Zsh configuration..."
+
+if ! zsh -n "$REPO_DIR/config/zshrc"; then
+    echo "[!] Syntax error detected in config/zshrc."
+    exit 1
+fi
+
+if ! zsh -n "$REPO_DIR/config/options.zsh"; then
+    echo "[!] Syntax error detected in options.zsh."
+    exit 1
+fi
+
+if ! zsh -n "$REPO_DIR/config/aliases.zsh"; then
+    echo "[!] Syntax error detected in aliases.zsh."
+    exit 1
+fi
+
+if ! zsh -n "$REPO_DIR/config/completion.zsh"; then
+    echo "[!] Syntax error detected in completion.zsh."
+    exit 1
+fi
+
+if [[ -f "$REPO_DIR/widgets/filesystem-preview.zsh" ]]; then
+    if ! zsh -n "$REPO_DIR/widgets/filesystem-preview.zsh"; then
+        echo "[!] Syntax error detected in filesystem-preview.zsh."
+        exit 1
+    fi
+fi
+
+if [[ -f "$REPO_DIR/widgets/tool-completion.zsh" ]]; then
+    if ! zsh -n "$REPO_DIR/widgets/tool-completion.zsh"; then
+        echo "[!] Syntax error detected in tool-completion.zsh."
+        exit 1
+    fi
+fi
+
+echo "[+] Zsh configuration syntax looks good."
+
+# ----------------------------------------------------------
+# Installation complete
 # ----------------------------------------------------------
 
 echo
@@ -84,7 +242,13 @@ echo "=========================================="
 echo " Installation completed successfully!"
 echo "=========================================="
 echo
+echo "Repository:"
+echo "  $REPO_DIR"
+echo
+echo "Configuration:"
+echo "  $HOME/.zshrc"
+echo
 echo "Restart Zsh with:"
 echo
-echo "    exec zsh"
+echo "  exec zsh"
 echo
