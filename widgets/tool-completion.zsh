@@ -1,143 +1,90 @@
 # ==========================================================
+# Kali Zsh Config
 # Tool Completion Enhancements
 # ==========================================================
 #
 # Purpose:
-#   Small, safe enhancements for command/tool completion.
+#   - Improve command completion behavior
+#   - Refresh Zsh command cache when requested
+#   - Keep normal TAB completion untouched
+#   - Keep fzf-tab untouched
+#   - Keep autosuggestions untouched
 #
-# Design:
-#   - Does NOT replace normal Zsh completion
-#   - Does NOT override Tab
-#   - Does NOT create a second completion widget
-#   - Works alongside fzf-tab
-#   - Safe to disable independently
+# This module does NOT replace:
+#   - TAB
+#   - self-insert
+#   - accept-line
+#   - fzf-tab widgets
+#   - zsh-autosuggestions
 #
 # ==========================================================
 
 
 # ----------------------------------------------------------
-# Completion styles for command arguments
+# Safety
 # ----------------------------------------------------------
 
-# Keep completion results readable.
-zstyle ':completion:*' menu select
+# This file is intended for interactive Zsh.
+# Do nothing if Zsh is not running interactively.
 
-# Use case-insensitive matching.
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-
-# Show useful descriptions when available.
-zstyle ':completion:*' verbose true
-zstyle ':completion:*' auto-description 'specify: %d'
-
-# Keep completion groups visually separated.
-zstyle ':completion:*' group-name ''
+[[ -o interactive ]] || return
 
 
 # ----------------------------------------------------------
-# Command completion
-# ----------------------------------------------------------
-
-# Ask Zsh to rehash commands when necessary.
-# This helps when a new executable is installed while
-# the shell is already running.
-zstyle ':completion:*' rehash true
-
-
-# ----------------------------------------------------------
-# Option completion
-# ----------------------------------------------------------
-
-# When a command has Zsh completion metadata, allow its
-# command-line options to be completed normally.
-#
-# IMPORTANT:
-# We intentionally do NOT create our own list of options.
-# This prevents fake/outdated options from being suggested.
-zstyle ':completion:*' completer _expand _complete
-
-
-# ----------------------------------------------------------
-# File completion
-# ----------------------------------------------------------
-
-# Keep filesystem completion enabled for commands that
-# accept paths such as:
-#
-#   cp
-#   mv
-#   rm
-#   ln
-#   cat
-#   less
-#   nano
-#   vim
-#   ssh
-#   scp
-#
-# Zsh decides what is valid for each command.
-zstyle ':completion:*' file-sort name
-
-
-# ----------------------------------------------------------
-# Directory completion
-# ----------------------------------------------------------
-
-# Prefer directory completion when the command expects
-# a directory.
-zstyle ':completion:*' list-dirs-first true
-
-
-# ----------------------------------------------------------
-# Process completion
-# ----------------------------------------------------------
-
-# Useful for commands such as kill.
-zstyle ':completion:*:*:kill:*' command \
-    'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-
-
-# ----------------------------------------------------------
-# SSH host completion
-# ----------------------------------------------------------
-
-# Zsh can normally complete hosts from SSH configuration
-# and known-host information.
-#
-# We do not manually parse ~/.ssh here because Zsh already
-# provides SSH completion where supported.
-
-
-# ----------------------------------------------------------
-# Command cache refresh helper
+# Command completion refresh helper
 # ----------------------------------------------------------
 
 _tool_completion_refresh() {
     rehash
+
     zle -M "Command completion cache refreshed"
+
+    zle redisplay
 }
 
 zle -N _tool_completion_refresh
 
 
 # ----------------------------------------------------------
-# Optional shortcut
-# Ctrl + Alt + R = refresh command completion cache
+# Optional keyboard shortcut
 # ----------------------------------------------------------
+#
+# Ctrl + Alt + R
+# Refresh the command completion cache.
+#
+# This does NOT replace TAB.
+# It does NOT replace self-insert.
+# It does NOT replace accept-line.
+#
 
 bindkey '^[^R' _tool_completion_refresh
 
 
 # ----------------------------------------------------------
+# Completion refresh after command execution
+# ----------------------------------------------------------
+#
+# Zsh normally updates its command hash when necessary.
+# We intentionally do not force rehash after every command,
+# because doing so would create unnecessary overhead.
+#
+# The manual shortcut above is provided when a newly installed
+# command is not immediately visible to completion.
+#
+
+
+# ----------------------------------------------------------
 # Safety check
 # ----------------------------------------------------------
-
+#
 # Nothing in this file replaces:
 #
-#   Tab
+#   TAB
 #   self-insert
 #   accept-line
 #   fzf-tab widgets
-#   autosuggestions
+#   zsh-autosuggestions
 #
-# The module only configures completion styles and provides
-# an optional manual refresh shortcut.
+# The module only provides a safe command-cache refresh helper.
+#
+# ==========================================================
