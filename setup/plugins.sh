@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ==========================================================
-# Kali Zsh Configuration
+# Kali Zsh Config
 # Plugin Setup
 #
 # Installs:
@@ -9,10 +9,13 @@
 #   - zsh-autosuggestions
 #   - zsh-syntax-highlighting
 #
+# Plugins are installed under:
+#   ~/plugins/
+#
 # Safe to run multiple times.
 # ==========================================================
 
-set -e
+set -euo pipefail
 
 PLUGIN_DIR="$HOME/plugins"
 
@@ -26,13 +29,13 @@ install_plugin() {
 
     if [[ -d "$destination/.git" ]]; then
         echo "[=] $name already installed."
-        return
+        return 0
     fi
 
     if [[ -e "$destination" ]]; then
-        echo "[!] $destination exists but is not a Git repository."
+        echo "[!] $destination already exists but is not a Git repository."
         echo "    Skipping $name."
-        return
+        return 0
     fi
 
     echo "[+] Installing $name..."
@@ -56,4 +59,3 @@ install_plugin \
 
 echo
 echo "[+] Plugin setup completed."
-
