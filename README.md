@@ -315,7 +315,7 @@ kali-zsh-config/
 | `config/zshrc` | The main Zsh configuration containing the working terminal setup. |
 | `setup/directories.sh` | Creates required directories and prepares the environment. |
 | `setup/packages.sh` | Checks and prepares required packages and dependencies. |
-| `setup/plugins.sh` | Installs or prepares required Zsh plugins (`fzf-tab`, `zsh-autosuggestions`, `zsh-syntax-highlighting`). |
+| `setup/plugins.sh` | Installs  or prepares required Zsh plugins (`fzf-tab`, `zsh-autosuggestions`, `zsh-syntax-highlighting`). |
 | `install.sh` | Backs up the user's existing configuration and installs the project configuration. |
 | `update.sh` | Helps update an existing installation. |
 | `uninstall.sh` | Removes the project configuration and restores the previous configuration when available. |
