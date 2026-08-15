@@ -1,328 +1,705 @@
-# Kali Zsh Config
+Kali Zsh Config
 
-A modular, practical, and customizable Zsh configuration designed primarily for Kali Linux and other Debian-based Linux distributions.
+A practical, customizable, and feature-rich Zsh configuration designed primarily for Kali Linux and other Debian-based Linux distributions.
 
-![Kali Zsh Config Preview](Screenshots/2.png)
+"Kali Zsh Config Preview" (Screenshots/2.png)
 
-This project provides an organized terminal environment with improved completion, fzf-tab integration, autosuggestions, syntax highlighting, filesystem previews, useful aliases, and modular Zsh widgets.
+Kali Zsh Config provides a polished terminal experience with:
 
-The project is designed so that the complete configuration can be backed up, installed, updated, customized, removed, and deployed on another machine without manually rebuilding the configuration from scratch.
+- Kali-style Zsh prompt
+- Native Zsh completion
+- Interactive "fzf-tab" completion
+- Zsh autosuggestions
+- Zsh syntax highlighting
+- Filesystem preview
+- Useful aliases
+- Custom keyboard shortcuts
+- File and directory browsing directly from the command line
 
----
-
-## ✨ Features
-
-**Shell Experience**
-* Modular Zsh configuration
-* Kali-style prompt
-* Useful Zsh options
-* Command history configuration
-* Zsh autosuggestions
-* Zsh syntax highlighting
-
-**Completion**
-* Native Zsh completion
-* Improved completion behavior
-* fzf-tab integration
-* Interactive completion menus
-* File and directory completion
-* Tool/command completion support where available
-
-**Filesystem Preview**
-The filesystem preview widget provides an interactive way to browse files and directories from the command line. Depending on the selected filesystem object, the preview can show:
-* File type & Permissions
-* Owner & Group
-* Size & Modification time
-* Directory contents
-* Symbolic-link target
-* Text-file contents
-* Basic filesystem information
-
-**Custom Widgets**
-Custom widgets are kept separately from the main Zsh configuration. This makes the project easier to maintain, debug, customize, disable, update, and reuse on another machine.
+The project is designed to be easy to install, use, update, back up, and remove without manually rebuilding your Zsh configuration.
 
 ---
 
-## 🖥️ Supported Systems
+✨ Features
 
-* **Primary target:** Kali Linux
-* **Expected to work on:** Debian, Ubuntu, Linux Mint, Parrot OS, and other Debian-based distributions.
-* **Other Linux distributions:** The Zsh configuration itself is mostly portable. However, package names, default paths, plugin locations, and pre-installed utilities may differ between distributions. For non-Debian systems, some dependencies may need to be installed manually.
+🖥️ Shell Experience
 
-> **Note:** Kali Linux is the primary development and testing target.
+- Kali-style two-line prompt
+- Colored command prompt
+- Root/user prompt distinction
+- Useful Zsh options
+- Improved command history
+- Emacs-style key bindings
+- Automatic directory navigation
+- Command-not-found integration where available
+
+🎨 Syntax Highlighting
+
+The configuration supports "zsh-syntax-highlighting" for visual command feedback.
+
+Commands, paths, options, arguments, brackets, and other shell elements can receive different visual styles while typing.
+
+💡 Autosuggestions
+
+"zsh-autosuggestions" provides suggestions based on your command history.
+
+Start typing a previously used command and Zsh can display a suggestion that can be accepted using the normal keyboard controls.
+
+⌨️ Completion
+
+The configuration keeps normal Zsh completion available while enhancing the experience with:
+
+- Native Zsh completion
+- Interactive completion menus
+- "fzf-tab" integration
+- File and directory completion
+- Command completion
+- History-aware completion
+- Improved completion matching
+
+Normal "Tab" completion remains available.
+
+🔎 fzf-tab
+
+"fzf-tab" provides an interactive fuzzy-selection interface for Zsh completion.
+
+It is one of the main features of this configuration and is installed automatically by the installer when required.
+
+📁 Filesystem Preview
+
+The custom filesystem preview widget provides an interactive way to browse files and directories directly from the command line.
+
+Press:
+
+Ctrl + Space
+
+while entering a supported filesystem command.
+
+Depending on the selected object, the preview can display:
+
+- File or directory type
+- Permissions
+- Owner
+- Group
+- Size
+- Modification time
+- Directory contents
+- Symbolic-link target
+- Text-file contents
+- Basic filesystem information
+
+Binary files are not displayed as raw content.
+
+⚡ Useful Aliases
+
+The configuration includes common aliases such as:
+
+ll
+la
+l
+
+along with colored versions of common commands such as:
+
+ls
+grep
+fgrep
+egrep
+diff
+ip
 
 ---
 
-## 📦 Requirements
+🖥️ Supported Systems
 
-### Required
-* Zsh
-* Git
-* fzf
-* Zsh completion
+Primary Target
 
-### Recommended
-* zsh-autosuggestions
-* zsh-syntax-highlighting
+- Kali Linux
 
-### Used by filesystem previews
-Depending on the feature being used: `find`, `ls`, `stat`, `file`, `sed`, `readlink`. *(Most of these utilities are already available on typical Kali/Debian installations.)*
+Expected to Work On
+
+- Debian
+- Ubuntu
+- Linux Mint
+- Parrot OS
+- Other Debian-based distributions
+
+The configuration itself is largely portable across Linux systems. However, package names, plugin locations, and pre-installed utilities may differ.
+
+«Kali Linux is the primary development and testing target.»
 
 ---
 
-## 🚀 Installation
+📦 Requirements
 
-### Method 1 — Install from GitHub
+The installer is designed to prepare the required environment automatically where possible.
 
-Clone the repository, make the installer executable, and run it:
+Required
 
-```bash
-git clone [https://github.com/Jamil601/kali-zsh-config.git](https://github.com/Jamil601/kali-zsh-config.git)
+- Zsh
+- Git
+- fzf
+- Zsh completion
+
+Plugins
+
+- "fzf-tab"
+- "zsh-autosuggestions"
+- "zsh-syntax-highlighting"
+
+Filesystem Preview Utilities
+
+The filesystem preview uses common Linux utilities such as:
+
+find
+ls
+stat
+file
+sed
+readlink
+
+Most of these are already available on a normal Kali/Debian installation.
+
+---
+
+🚀 Installation
+
+Method 1 — Install from GitHub
+
+Clone the repository:
+
+git clone https://github.com/Jamil601/kali-zsh-config.git
+
+Enter the repository:
+
 cd kali-zsh-config
+
+Make the installer executable:
+
 chmod +x install.sh
+
+Run the installer:
+
 ./install.sh
-```
-Follow the instructions displayed by the installer. After installation, restart Zsh:
-```bash
+
+The installer will:
+
+1. Check the environment.
+2. Prepare required directories.
+3. Check/install required packages where supported.
+4. Install or prepare required Zsh plugins.
+5. Back up the existing "~/.zshrc".
+6. Install the repository Zsh configuration.
+7. Validate the configuration before completing.
+8. Leave the current shell untouched.
+
+After installation, start a fresh Zsh session:
+
 exec zsh
-```
-*(You can also close and reopen the terminal.)*
+
+You can also close and reopen the terminal.
 
 ---
 
-### 🔎 Verify the Installation
+🛡️ Automatic Backup
 
-After restarting Zsh, check that Zsh is running and verify the versions:
-```bash
+The installer is designed to protect the existing Zsh configuration.
+
+Before replacing:
+
+~/.zshrc
+
+the installer creates a backup when one does not already exist.
+
+Typical backup:
+
+~/.zshrc.backup
+
+This makes it possible to restore the previous configuration if you decide not to use Kali Zsh Config.
+
+---
+
+🔍 Verify Installation
+
+After restarting Zsh, check:
+
 echo $SHELL
+
+Check Zsh:
+
 zsh --version
+
+Check fzf:
+
 fzf --version
-```
-You can also verify that the custom configuration files exist:
-```bash
+
+Check the repository:
+
+ls ~/kali-zsh-config
+
+You can also verify the main configuration:
+
 ls ~/kali-zsh-config/config
-ls ~/kali-zsh-config/widgets
-```
 
 ---
 
-### 🧪 Test Before Installing
+🧪 Test the Configuration
 
-If you want to check the configuration before applying it, run syntax checks from the repository directory.
+Before installing or after making changes, you can check the Zsh configuration for syntax errors.
 
-**Check the main configuration & modules:**
-```bash
+From the repository directory:
+
 zsh -n config/zshrc
-zsh -n config/options.zsh
-zsh -n config/aliases.zsh
-zsh -n config/completion.zsh
-```
 
-**Check the widgets & shell scripts:**
-```bash
-zsh -n widgets/filesystem-preview.zsh
-zsh -n widgets/tool-completion.zsh
+If the command produces no output, the syntax check passed.
+
+You can also check the installed configuration:
+
+zsh -n ~/.zshrc
+
+For shell scripts:
+
 bash -n install.sh
 bash -n uninstall.sh
 bash -n update.sh
-```
-*(If these commands produce no output, the corresponding syntax check passed.)*
+
+No output normally means the syntax check passed.
 
 ---
 
-## ⌨️ Using the Terminal
+⌨️ Using the Configuration
 
-The configuration does not replace normal Zsh behavior. Normal shell commands continue to work normally (e.g., `cd /etc/`). You can use normal `Tab` completion for files and directories. If `fzf-tab` is enabled, completion can provide an interactive selection interface.
+The configuration keeps normal Zsh behavior intact.
 
-### 📁 Filesystem Preview Widget
-The project includes an interactive filesystem preview widget. The widget can browse the current directory and preview filesystem objects before inserting a selected path into the command line.
+For example:
 
-For example, while entering a command such as `cd` or `cat`, the filesystem preview widget can be used to select a path interactively. The preview can distinguish between directories, regular files, symbolic links, and other filesystem objects.
-
-*(For text files, a limited portion of the file may be displayed as a preview. Binary files are not displayed as raw content.)*
-
-### 🎯 Keyboard Controls
-The custom filesystem widget uses `Ctrl + Space` for its interactive filesystem browser. Normal `Tab` completion remains available separately. *(If your terminal maps `Ctrl + Space` differently, the key binding can be changed in the widget configuration.)*
-
-### 🧩 fzf-tab
-`fzf-tab` enhances Zsh completion with an interactive fuzzy-selection interface. The project keeps `fzf-tab` configuration separate from the filesystem preview widget so that the two systems can be maintained independently.
-
-### 💡 Basic Examples
-**Directory completion:**
-```bash
 cd /etc/
-```
-*Press `Tab` to use normal completion.*
 
-**Selecting a file:**
-For commands that accept filesystem paths (such as `cat`, `less`, `nano`, `vim`, `cp`, `mv`, `rm`), filesystem completion can be used to select the appropriate path while viewing object info.
+You can continue using normal:
+
+Tab
+
+completion.
+
+When "fzf-tab" is enabled, Zsh completion can provide an interactive selection interface.
 
 ---
 
-## 🔄 Maintenance & Management
+📁 Filesystem Preview
 
-### Updating the Configuration
-The project is designed to be maintained through Git.
-```bash
+The filesystem preview widget is activated with:
+
+Ctrl + Space
+
+For example:
+
+cd /
+
+Then use:
+
+Ctrl + Space
+
+to open the interactive filesystem browser.
+
+The browser can show directories, files, symbolic links, and other filesystem objects.
+
+For text files, a limited portion of the file can be displayed.
+
+Binary files are intentionally not displayed as raw content.
+
+---
+
+🎯 Keyboard Controls
+
+Normal Completion
+
+Tab
+
+Use normal Zsh/fzf-tab completion.
+
+Filesystem Browser
+
+Ctrl + Space
+
+Open the custom filesystem preview browser.
+
+Prompt Toggle
+
+Ctrl + P
+
+Toggle the configured prompt layout.
+
+Other standard Zsh keyboard behavior remains available.
+
+---
+
+🔄 Updating
+
+If you already cloned the repository, you normally do not need to clone it again.
+
+Go into the project:
+
 cd ~/kali-zsh-config
+
+Then update it:
+
+git pull
+
+After updating:
+
+exec zsh
+
+If the project provides an update script, you can also use:
+
 chmod +x update.sh
 ./update.sh
-exec zsh
-```
 
-### 🔃 Manual Update
-If you prefer to control every step manually and review changes:
-```bash
-cd ~/kali-zsh-config
-git status
-git pull
-exec zsh
-```
+Then restart Zsh:
 
-### 🗑️ Uninstallation
-To remove the configuration using the project's uninstall script:
-```bash
+exec zsh
+
+«Existing users should normally update their existing repository instead of cloning the project again.»
+
+---
+
+🗑️ Uninstallation
+
+To remove Kali Zsh Config:
+
 cd ~/kali-zsh-config
+
+Make the uninstall script executable:
+
 chmod +x uninstall.sh
+
+Run:
+
 ./uninstall.sh
-exec zsh
-```
 
-### 🛡️ Backup and Restore
-Before modifying an existing Zsh configuration, create a backup:
-```bash
+The uninstall process is intended to restore the previous Zsh configuration from the backup created during installation.
+
+After uninstalling:
+
+exec zsh
+
+«Do not manually delete your backup before confirming that your previous Zsh configuration has been restored correctly.»
+
+---
+
+🔙 Manual Backup & Restore
+
+You can manually back up your configuration at any time:
+
 cp ~/.zshrc ~/.zshrc.backup
-```
-To restore the backup:
-```bash
+
+To restore it:
+
 cp ~/.zshrc.backup ~/.zshrc
+
+Then restart Zsh:
+
 exec zsh
-```
 
 ---
 
-## ⚠️ Important Safety Notes
-A shell configuration is executed when Zsh starts.
-* Always review configuration and installation scripts before running them, especially when installing from unfamiliar sources.
-* Do not blindly execute scripts obtained from unknown repositories.
-* This project does **not** require you to provide Passwords, GitHub tokens, SSH private keys, API keys, or Personal credentials.
-* **Never commit secrets to this repository.**
+⚙️ Customization
+
+The main configuration is stored in:
+
+config/zshrc
+
+You can customize:
+
+- Prompt appearance
+- Keyboard shortcuts
+- Completion behavior
+- History settings
+- Aliases
+- Syntax-highlighting styles
+- Autosuggestion behavior
+- "fzf-tab" settings
+- Filesystem preview behavior
+
+If you modify the configuration, always test it before starting a new shell:
+
+zsh -n config/zshrc
+
+Then:
+
+exec zsh
 
 ---
 
-## ⚙️ Customization
+📂 Project Structure
 
-The configuration is intentionally divided into separate files. Instead of modifying one huge `.zshrc`, edit the appropriate module:
-
-| Module | File Location | Description |
-|---|---|---|
-| **Zsh Options** | `config/options.zsh` | Shell options, History behavior, Completion options |
-| **Aliases** | `config/aliases.zsh` | Custom aliases (e.g., `alias ll='ls -l'`) |
-| **Completion** | `config/completion.zsh` | `compinit`, Completion styles & menu behavior |
-| **Filesystem Preview** | `widgets/filesystem-preview.zsh` | Customize layout, size, behavior, metadata, and key bindings |
-| **Tool Completion** | `widgets/tool-completion.zsh` | Additional command/tool completion functionality |
-
----
-
-## 📂 Project Structure & Architecture
-
-### Project Structure
-```text
 kali-zsh-config/
 ├── README.md
 ├── LICENSE
 ├── config/
-│   ├── zshrc
-│   ├── options.zsh
-│   ├── aliases.zsh
-│   └── completion.zsh
-├── widgets/
-│   ├── filesystem-preview.zsh
-│   └── tool-completion.zsh
+│   └── zshrc
 ├── setup/
-│   ├── packages.sh
 │   ├── directories.sh
+│   ├── packages.sh
 │   └── plugins.sh
-├── docs/
-│   ├── installation.md
-│   ├── features.md
-│   ├── troubleshooting.md
-│   ├── customization.md
-│   └── architecture.md
 ├── Screenshots/
+│   ├── 1.png
+│   ├── 2.png
+│   ├── 3.png
+│   └── 4.png
 ├── install.sh
 ├── uninstall.sh
 └── update.sh
-```
 
-### Architecture
-The project uses a modular configuration architecture. The main loader is `config/zshrc` which loads individual modules.
-```text
-~/.zshrc
-│
-▼
-config/zshrc
-│
-├── config/options.zsh
-├── config/aliases.zsh
-├── config/completion.zsh
-└── widgets/
-├── filesystem-preview.zsh
-└── tool-completion.zsh
-```
+Main Files
 
-### 🧰 Setup Scripts
-The `setup/` directory contains scripts used to prepare the environment:
-* `setup/packages.sh`: Prepare required packages and dependencies.
-* `setup/directories.sh`: Create required directories.
-* `setup/plugins.sh`: Plugin-related setup.
+"config/zshrc"
 
----
+The main Zsh configuration containing the working terminal setup.
 
-## 🧹 Troubleshooting
+"setup/directories.sh"
 
-* **Zsh syntax error:** Run `zsh -n ~/.zshrc` or test specific files in the repository.
-* **Completion is broken:** Try rebuilding the cache: `rm -f ~/.zcompdump*` then `exec zsh`.
-* **fzf is not working:** Check `fzf --version`. On Debian systems: `sudo apt update && sudo apt install fzf` then `exec zsh`.
-* **zsh-autosuggestions / syntax-highlighting not working:** Check if they exist in `/usr/share/` and restart Zsh.
-* **fzf-tab is not working:** Verify plugin location (e.g., `~/plugins/fzf-tab/`). Update the source line in config if needed.
-* **A widget causes a problem:** Check syntax (`zsh -n widgets/filesystem-preview.zsh`), temporarily disable it in `config/zshrc`, and `exec zsh`.
+Creates required directories and prepares the environment.
 
----
+"setup/packages.sh"
 
-## 🤝 Contributing & Bug Reports
+Checks and prepares required packages and dependencies.
 
-**Contributing:** Contributions and improvements are welcome! Keep the configuration modular, enforce LF line endings on all scripts so users don't encounter issues cloning on different filesystems, avoid unnecessary changes to unrelated files, test all modified files, update documentation, and **do not** commit secrets. For major changes, open an issue first.
+"setup/plugins.sh"
 
-**Bug Reports:** When reporting a problem, include your Linux distribution/version, Zsh/fzf/plugin versions, the relevant config file, exact command/error, and reproduction steps. Do not include passwords or personal credentials.
+Installs or prepares required Zsh plugins such as:
+
+- "fzf-tab"
+- "zsh-autosuggestions"
+- "zsh-syntax-highlighting"
+
+"install.sh"
+
+Backs up the user's existing configuration and installs the project configuration.
+
+"update.sh"
+
+Helps update an existing installation.
+
+"uninstall.sh"
+
+Removes the project configuration and restores the previous configuration when available.
 
 ---
 
-## 📸 Screenshots
+⚠️ Important Safety Notes
 
-Here are previews demonstrating the terminal appearance, completion interface, fzf-tab, and filesystem preview metadata:
+A Zsh configuration is executable shell code and runs when Zsh starts.
 
-**Terminal Appearance & Auto-suggestions**
-![Terminal Appearance](Screenshots/1.png)
+Always review shell configuration and installation scripts before executing them, especially when downloading projects from the internet.
 
-**Interactive Filesystem Preview**
-![Filesystem Preview](Screenshots/2.png)
+This project does not require users to provide:
 
-**Completion Interface**
-![Completion Interface](Screenshots/3.png)
+- Passwords
+- GitHub tokens
+- SSH private keys
+- API keys
+- Personal credentials
 
-**File Metadata & fzf-tab Integration**
-![fzf-tab Integration](Screenshots/4.png)
+Never commit secrets or private credentials to this repository.
+
+Do not run the installer as root unless the project specifically documents a root installation method.
+
+---
+
+🐛 Troubleshooting
+
+Zsh Syntax Error
+
+Check the installed configuration:
+
+zsh -n ~/.zshrc
+
+Check the repository configuration:
+
+zsh -n config/zshrc
 
 ---
 
-## 🔐 License & Support
+Completion Is Not Working
 
-* **License:** This project is licensed under the MIT License. See `LICENSE` for the complete text.
-* **Support:** If this project is useful to you, consider giving the repository a ⭐ star. You can also report bugs, suggest improvements, or contribute changes.
+Try rebuilding the Zsh completion cache:
+
+rm -f ~/.zcompdump*
+
+Then restart:
+
+exec zsh
 
 ---
-**👤 Author:** Jamil601  
-* **GitHub:** [Jamil601](https://github.com/Jamil601)  
-* **Repository:** [kali-zsh-config](https://github.com/Jamil601/kali-zsh-config)
-* 
+
+fzf Is Not Working
+
+Check:
+
+fzf --version
+
+On Kali/Debian:
+
+sudo apt update
+sudo apt install fzf
+
+Then:
+
+exec zsh
+
+---
+
+fzf-tab Is Not Working
+
+Check whether the plugin exists:
+
+ls ~/plugins/fzf-tab/
+
+If it is missing, run the installer again:
+
+cd ~/kali-zsh-config
+./install.sh
+
+Then:
+
+exec zsh
+
+---
+
+Autosuggestions Are Not Working
+
+Check:
+
+ls /usr/share/zsh-autosuggestions/
+
+Then restart Zsh:
+
+exec zsh
+
+---
+
+Syntax Highlighting Is Not Working
+
+Check:
+
+ls /usr/share/zsh-syntax-highlighting/
+
+Then:
+
+exec zsh
+
+---
+
+Filesystem Preview Is Not Working
+
+Check that "fzf" exists:
+
+fzf --version
+
+Check the required utilities:
+
+command -v find
+command -v ls
+command -v stat
+command -v file
+command -v sed
+command -v readlink
+
+Then restart:
+
+exec zsh
+
+---
+
+The Terminal Looks Wrong After Installation
+
+Restore your previous configuration:
+
+cp ~/.zshrc.backup ~/.zshrc
+
+Then:
+
+exec zsh
+
+If the backup was created by the installer, keep it until you are completely satisfied with the new configuration.
+
+---
+
+📸 Screenshots
+
+The repository includes screenshots showing the main terminal features.
+
+Terminal Appearance & Autosuggestions
+
+"Terminal Appearance" (Screenshots/1.png)
+
+Filesystem Preview
+
+"Filesystem Preview" (Screenshots/2.png)
+
+Completion Interface
+
+"Completion Interface" (Screenshots/3.png)
+
+fzf-tab Integration
+
+"fzf-tab Integration" (Screenshots/4.png)
+
+---
+
+🤝 Contributing
+
+Contributions and improvements are welcome.
+
+When contributing:
+
+- Keep the configuration stable and practical.
+- Avoid unnecessary changes to unrelated features.
+- Test modified Zsh files with "zsh -n".
+- Test installation and uninstallation.
+- Use Unix LF line endings.
+- Do not commit passwords, tokens, private keys, or other secrets.
+- Keep the main configuration easy to understand.
+
+For major changes, open an issue first so the change can be discussed before implementation.
+
+---
+
+🐞 Bug Reports
+
+When reporting a problem, include:
+
+- Linux distribution and version
+- Zsh version
+- fzf version
+- Relevant plugin versions
+- Exact command that caused the problem
+- Exact error message
+- Steps to reproduce the issue
+
+Do not include passwords, tokens, private keys, or other sensitive information.
+
+---
+
+⭐ Support
+
+If this project is useful to you, consider giving the repository a ⭐ star.
+
+Bug reports, feature suggestions, improvements, and contributions are always welcome.
+
+---
+
+🔐 License
+
+This project is licensed under the MIT License.
+
+See the ""LICENSE"" (LICENSE) file for the complete license text.
+
+---
+
+👤 Author
+
+Jamil601
+
+GitHub: "Jamil601" (https://github.com/Jamil601)
+
+Repository: "kali-zsh-config" (https://github.com/Jamil601/kali-zsh-config)
