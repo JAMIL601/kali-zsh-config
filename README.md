@@ -2,7 +2,7 @@
 
 A modular, practical, and customizable Zsh configuration designed primarily for Kali Linux and other Debian-based Linux distributions.
 
-![Kali Zsh Config Preview](Screenshots/1.png)
+![Kali Zsh Config Preview](Screenshots/2.png)
 
 This project provides an organized terminal environment with improved completion, fzf-tab integration, autosuggestions, syntax highlighting, filesystem previews, useful aliases, and modular Zsh widgets.
 
