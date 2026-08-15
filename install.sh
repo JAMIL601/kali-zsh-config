@@ -1,153 +1,86 @@
 #!/usr/bin/env bash
 
-# ==========================================================
-# Kali Zsh Config
-# Main Installer
-# ==========================================================
-
 set -euo pipefail
 
-# ----------------------------------------------------------
-# Repository path
-# ----------------------------------------------------------
+# ==========================================================
+# Kali Zsh Config - Installer
+# ==========================================================
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="$REPO_DIR/config/zshrc"
 
-# ----------------------------------------------------------
-# Basic information
-# ----------------------------------------------------------
+BACKUP_DIR="$HOME/.kali-zsh-backups"
+BACKUP_FILE="$BACKUP_DIR/zshrc.before-install"
+
+PLUGIN_DIR="$HOME/plugins"
+
+FZF_TAB_DIR="$PLUGIN_DIR/fzf-tab"
+ZSH_AUTOSUGGESTIONS_DIR="$PLUGIN_DIR/zsh-autosuggestions"
+ZSH_SYNTAX_HIGHLIGHTING_DIR="$PLUGIN_DIR/zsh-syntax-highlighting"
 
 echo
-echo "=============================================="
-echo "        Kali Zsh Config Installer"
-echo "=============================================="
-echo
-echo "[+] Repository:"
-echo "    $REPO_DIR"
+echo "=========================================================="
+echo " Kali Zsh Config - Installer"
+echo "=========================================================="
 echo
 
 # ----------------------------------------------------------
-# Required commands
+# Basic checks
 # ----------------------------------------------------------
 
-for cmd in bash zsh; do
-    if ! command -v "$cmd" >/dev/null 2>&1; then
-        echo "[!] Required command not found: $cmd"
-        exit 1
-    fi
-done
-
-# ----------------------------------------------------------
-# Required repository files
-# ----------------------------------------------------------
-
-REQUIRED_FILES=(
-    "config/zshrc"
-    "config/options.zsh"
-    "config/aliases.zsh"
-    "config/completion.zsh"
-)
-
-for file in "${REQUIRED_FILES[@]}"; do
-    if [[ ! -f "$REPO_DIR/$file" ]]; then
-        echo "[!] Missing required file:"
-        echo "    $REPO_DIR/$file"
-        exit 1
-    fi
-done
-
-echo "[+] Required configuration files found."
-
-# ----------------------------------------------------------
-# Optional setup scripts
-# ----------------------------------------------------------
-
-if [[ -f "$REPO_DIR/setup/packages.sh" ]]; then
-    echo
-    echo "[+] Running package setup..."
-
-    chmod +x "$REPO_DIR/setup/packages.sh"
-
-    if "$REPO_DIR/setup/packages.sh"; then
-        echo "[+] Package setup completed."
-    else
-        echo "[!] Package setup failed."
-        exit 1
-    fi
+if [[ "${EUID}" -eq 0 ]]; then
+    echo "[!] Do not run this installer with sudo or as root."
+    echo "[!] Run it as your normal user."
+    exit 1
 fi
 
-if [[ -f "$REPO_DIR/setup/directories.sh" ]]; then
-    echo
-    echo "[+] Running directory setup..."
-
-    chmod +x "$REPO_DIR/setup/directories.sh"
-
-    if "$REPO_DIR/setup/directories.sh"; then
-        echo "[+] Directory setup completed."
-    else
-        echo "[!] Directory setup failed."
-        exit 1
-    fi
+if ! command -v zsh >/dev/null 2>&1; then
+    echo "[!] Zsh is not installed."
+    echo "[!] Install it first:"
+    echo "    sudo apt install zsh"
+    exit 1
 fi
 
-if [[ -f "$REPO_DIR/setup/plugins.sh" ]]; then
-    echo
-    echo "[+] Running plugin setup..."
-
-    chmod +x "$REPO_DIR/setup/plugins.sh"
-
-    if "$REPO_DIR/setup/plugins.sh"; then
-        echo "[+] Plugin setup completed."
-    else
-        echo "[!] Plugin setup failed."
-        exit 1
-    fi
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo "[!] Configuration file not found:"
+    echo "    $CONFIG_FILE"
+    exit 1
 fi
 
 # ----------------------------------------------------------
-# Validate Zsh configuration BEFORE installation
+# Convert CRLF to LF if needed
 # ----------------------------------------------------------
 
-echo
+if command -v dos2unix >/dev/null 2>&1; then
+    dos2unix "$CONFIG_FILE" >/dev/null 2>&1 || true
+else
+    sed -i 's/\r$//' "$CONFIG_FILE"
+fi
+
+# ----------------------------------------------------------
+# Validate configuration before installing
+# ----------------------------------------------------------
+
 echo "[+] Checking Zsh configuration..."
 
-ZSH_FILES=(
-    "config/zshrc"
-    "config/options.zsh"
-    "config/aliases.zsh"
-    "config/completion.zsh"
-)
-
-for file in "${ZSH_FILES[@]}"; do
-    if ! zsh -n "$REPO_DIR/$file"; then
-        echo
-        echo "[!] Syntax error in:"
-        echo "    $REPO_DIR/$file"
-        echo
-        echo "[!] Installation stopped."
-        exit 1
-    fi
-done
-
-if [[ -f "$REPO_DIR/widgets/filesystem-preview.zsh" ]]; then
-    if ! zsh -n "$REPO_DIR/widgets/filesystem-preview.zsh"; then
-        echo
-        echo "[!] Syntax error in:"
-        echo "    widgets/filesystem-preview.zsh"
-        exit 1
-    fi
-fi
-
-if [[ -f "$REPO_DIR/widgets/tool-completion.zsh" ]]; then
-    if ! zsh -n "$REPO_DIR/widgets/tool-completion.zsh"; then
-        echo
-        echo "[!] Syntax error in:"
-        echo "    widgets/tool-completion.zsh"
-        exit 1
-    fi
+if ! zsh -n "$CONFIG_FILE"; then
+    echo
+    echo "[!] Syntax error detected in config/zshrc."
+    echo "[!] Installation stopped."
+    exit 1
 fi
 
 echo "[+] Zsh configuration syntax is valid."
+
+# ----------------------------------------------------------
+# Create directories
+# ----------------------------------------------------------
+
+mkdir -p "$BACKUP_DIR"
+mkdir -p "$PLUGIN_DIR"
+mkdir -p "$HOME/.cache"
+
+echo "[+] Required directories ready."
 
 # ----------------------------------------------------------
 # Backup existing ~/.zshrc
@@ -155,147 +88,114 @@ echo "[+] Zsh configuration syntax is valid."
 
 if [[ -f "$HOME/.zshrc" ]]; then
 
-    echo
-    echo "[+] Existing ~/.zshrc detected."
-
-    BACKUP="$HOME/.zshrc.backup"
-
-    if [[ -e "$BACKUP" ]]; then
-        BACKUP="$HOME/.zshrc.backup.$(date +%Y%m%d-%H%M%S)"
+    if [[ -f "$BACKUP_FILE" ]]; then
+        TIMESTAMP="$(date '+%Y%m%d-%H%M%S')"
+        BACKUP_FILE="$BACKUP_DIR/zshrc.before-install-$TIMESTAMP"
     fi
 
-    cp "$HOME/.zshrc" "$BACKUP"
+    cp -p "$HOME/.zshrc" "$BACKUP_FILE"
 
-    echo "[+] Backup created:"
-    echo "    $BACKUP"
+    echo "[+] Existing ~/.zshrc backed up:"
+    echo "    $BACKUP_FILE"
 
 else
-    echo
-    echo "[+] No existing ~/.zshrc found."
+    echo "[=] No existing ~/.zshrc found."
 fi
 
 # ----------------------------------------------------------
-# Create repository loader
+# Clone/update fzf-tab
 # ----------------------------------------------------------
 
-echo
-echo "[+] Installing repository Zsh loader..."
+install_or_update_repo() {
+    local url="$1"
+    local directory="$2"
+    local name="$3"
 
-TEMP_ZSHRC="$(mktemp)"
+    if [[ -d "$directory/.git" ]]; then
+        echo "[=] $name already installed."
+        return
+    fi
 
-cat > "$TEMP_ZSHRC" <<EOF
-# ==========================================================
-# Kali Zsh Config
-# Generated by install.sh
-# ==========================================================
+    if [[ -e "$directory" ]]; then
+        echo "[!] $directory exists but is not a Git repository."
+        echo "[!] Skipping $name."
+        return
+    fi
 
-# Absolute path of the installed repository.
-export KALI_ZSH_CONFIG_DIR="$REPO_DIR"
+    echo "[+] Installing $name..."
 
-# Load the main repository configuration.
-if [[ -f "\$KALI_ZSH_CONFIG_DIR/config/zshrc" ]]; then
-    source "\$KALI_ZSH_CONFIG_DIR/config/zshrc"
-else
-    print -u2 "Kali Zsh Config: repository configuration not found:"
-    print -u2 "  \$KALI_ZSH_CONFIG_DIR/config/zshrc"
-fi
-EOF
-
-# ----------------------------------------------------------
-# Validate generated ~/.zshrc BEFORE replacing it
-# ----------------------------------------------------------
-
-if ! zsh -n "$TEMP_ZSHRC"; then
-    echo "[!] Generated ~/.zshrc failed syntax validation."
-    rm -f "$TEMP_ZSHRC"
-    exit 1
-fi
-
-# ----------------------------------------------------------
-# Install generated ~/.zshrc
-# ----------------------------------------------------------
-
-mv "$TEMP_ZSHRC" "$HOME/.zshrc"
-
-chmod 600 "$HOME/.zshrc"
-
-echo "[+] ~/.zshrc installed successfully."
-
-# ----------------------------------------------------------
-# Verify repository path
-# ----------------------------------------------------------
-
-echo
-echo "[+] Verifying repository path..."
-
-if ! grep -Fq "export KALI_ZSH_CONFIG_DIR=\"$REPO_DIR\"" "$HOME/.zshrc"; then
-    echo "[!] Repository path verification failed."
-    exit 1
-fi
-
-if grep -Fq "/home/config/" "$HOME/.zshrc"; then
-    echo "[!] Invalid /home/config/ path detected."
-    exit 1
-fi
-
-echo "[+] Repository path verified."
-
-# ----------------------------------------------------------
-# Final configuration test
-# ----------------------------------------------------------
-
-echo
-echo "[+] Final Zsh configuration test..."
-
-TEST_OUTPUT="$(
-    KALI_ZSH_CONFIG_DIR="$REPO_DIR" \
-    zsh -ic 'print -r -- "$KALI_ZSH_CONFIG_DIR"' \
-    2>&1
-)" || {
-    echo
-    echo "[!] Zsh failed to load the configuration."
-    echo
-    echo "$TEST_OUTPUT"
-    echo
-    echo "[!] Your previous ~/.zshrc backup is still available."
-    exit 1
+    git clone --depth 1 "$url" "$directory"
 }
 
-if [[ "$TEST_OUTPUT" != "$REPO_DIR" ]]; then
+if command -v git >/dev/null 2>&1; then
+
+    install_or_update_repo \
+        "https://github.com/Aloxaf/fzf-tab.git" \
+        "$FZF_TAB_DIR" \
+        "fzf-tab"
+
+else
+    echo "[!] Git is not installed."
+    echo "[!] Install Git before using fzf-tab."
+fi
+
+# ----------------------------------------------------------
+# System plugin compatibility
+# ----------------------------------------------------------
+
+if [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+    echo "[=] System zsh-autosuggestions found."
+else
+    echo "[!] zsh-autosuggestions system package not found."
+fi
+
+if [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    echo "[=] System zsh-syntax-highlighting found."
+else
+    echo "[!] zsh-syntax-highlighting system package not found."
+fi
+
+# ----------------------------------------------------------
+# Install configuration
+# ----------------------------------------------------------
+
+echo "[+] Installing Kali Zsh configuration..."
+
+cp "$CONFIG_FILE" "$HOME/.zshrc"
+
+chmod 644 "$HOME/.zshrc"
+
+# ----------------------------------------------------------
+# Final validation
+# ----------------------------------------------------------
+
+echo "[+] Validating installed ~/.zshrc..."
+
+if ! zsh -n "$HOME/.zshrc"; then
     echo
-    echo "[!] Repository path test failed."
-    echo "Expected:"
-    echo "    $REPO_DIR"
-    echo "Got:"
-    echo "    $TEST_OUTPUT"
+    echo "[!] Installed ~/.zshrc failed syntax validation."
+    echo "[!] Restoring previous configuration..."
+
+    if [[ -f "$BACKUP_FILE" ]]; then
+        cp "$BACKUP_FILE" "$HOME/.zshrc"
+        echo "[+] Previous ~/.zshrc restored."
+    fi
+
     exit 1
 fi
 
-echo "[+] Zsh configuration loaded successfully."
-
-# ----------------------------------------------------------
-# Installation complete
-# ----------------------------------------------------------
-
 echo
-echo "=============================================="
-echo "     Installation completed successfully!"
-echo "=============================================="
+echo "=========================================================="
+echo " Installation completed successfully!"
+echo "=========================================================="
 echo
-echo "Repository:"
-echo "    $REPO_DIR"
+echo "Your previous ~/.zshrc was backed up."
 echo
-echo "Zsh configuration:"
-echo "    $HOME/.zshrc"
-echo
-echo "Existing configuration backup:"
-echo "    $HOME/.zshrc.backup*"
-echo
-echo "IMPORTANT:"
-echo "Start a fresh Zsh session with:"
+echo "Start the new configuration with:"
 echo
 echo "    exec zsh"
 echo
-echo "The installer does NOT automatically execute"
-echo "exec zsh, so your current shell is left untouched."
+echo "To restore your previous configuration:"
+echo
+echo "    ./uninstall.sh"
 echo
