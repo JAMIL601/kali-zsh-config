@@ -385,7 +385,7 @@ Restore your previous configuration:
 cp ~/.zshrc.backup ~/.zshrc
 exec zsh
 ```
-*(If the backup was created by the installer, keep it until you are completely satisfied with the new configuration.)*
+*(If the backup was created by the  installer, keep it until you are completely satisfied with the new configuration.)*
 
 ---
 
