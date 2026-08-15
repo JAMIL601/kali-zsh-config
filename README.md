@@ -2,6 +2,8 @@
 
 A modular, practical, and customizable Zsh configuration designed primarily for Kali Linux and other Debian-based Linux distributions.
 
+![Kali Zsh Config Preview](Screenshots/1.png)
+
 This project provides an organized terminal environment with improved completion, fzf-tab integration, autosuggestions, syntax highlighting, filesystem previews, useful aliases, and modular Zsh widgets.
 
 The project is designed so that the complete configuration can be backed up, installed, updated, customized, removed, and deployed on another machine without manually rebuilding the configuration from scratch.
@@ -247,7 +249,7 @@ kali-zsh-config/
 │   ├── troubleshooting.md
 │   ├── customization.md
 │   └── architecture.md
-├── screenshots/
+├── Screenshots/
 ├── install.sh
 ├── uninstall.sh
 └── update.sh
@@ -290,14 +292,27 @@ The `setup/` directory contains scripts used to prepare the environment:
 
 ## 🤝 Contributing & Bug Reports
 
-**Contributing:** Contributions and improvements are welcome! Keep the configuration modular, avoid unnecessary changes to unrelated files, test all modified files, update documentation, and **do not** commit secrets. For major changes, open an issue first.
+**Contributing:** Contributions and improvements are welcome! Keep the configuration modular, enforce LF line endings on all scripts so users don't encounter issues cloning on different filesystems, avoid unnecessary changes to unrelated files, test all modified files, update documentation, and **do not** commit secrets. For major changes, open an issue first.
 
 **Bug Reports:** When reporting a problem, include your Linux distribution/version, Zsh/fzf/plugin versions, the relevant config file, exact command/error, and reproduction steps. Do not include passwords or personal credentials.
 
 ---
 
 ## 📸 Screenshots
-Screenshots and demonstrations are stored in the `screenshots/` folder, showing the terminal appearance, completion interface, fzf-tab, filesystem preview, and file metadata.
+
+Here are previews demonstrating the terminal appearance, completion interface, fzf-tab, and filesystem preview metadata:
+
+**Terminal Appearance & Auto-suggestions**
+![Terminal Appearance](Screenshots/1.png)
+
+**Interactive Filesystem Preview**
+![Filesystem Preview](Screenshots/2.png)
+
+**Completion Interface**
+![Completion Interface](Screenshots/3.png)
+
+**File Metadata & fzf-tab Integration**
+![fzf-tab Integration](Screenshots/4.png)
 
 ---
 
@@ -309,4 +324,5 @@ Screenshots and demonstrations are stored in the `screenshots/` folder, showing 
 ---
 **👤 Author:** Jamil601  
 * **GitHub:** [Jamil601](https://github.com/Jamil601)  
-* **Repository:** [kali-zsh-config](https://github.com/Jamil601/kali-zsh-config)  
+* **Repository:** [kali-zsh-config](https://github.com/Jamil601/kali-zsh-config)
+* 
