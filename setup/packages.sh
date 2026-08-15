@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 # ==========================================================
-# Kali Zsh Configuration
+# Kali Zsh Config
 # Package Setup
 #
 # Installs packages required by the configuration.
 # Safe to run multiple times.
 # ==========================================================
 
-set -e
+set -euo pipefail
 
 echo "[+] Updating package information..."
 sudo apt-get update
